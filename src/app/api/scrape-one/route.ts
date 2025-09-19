@@ -63,7 +63,7 @@ export async function POST(request: Request) {
 
     await page.goto(url, {
       waitUntil: "domcontentloaded",
-      timeout: 30000,
+      timeout: 60000,
     });
     await page.waitForSelector(".css-139x40p");
 
