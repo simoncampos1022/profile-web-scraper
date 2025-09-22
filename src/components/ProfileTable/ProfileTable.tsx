@@ -18,8 +18,8 @@ const ProfileTable = ({
   const { token, user } = useAuth();
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
 
-  const handleStatusChange = async (profileId: string, status: boolean | null, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent row click
+  const handleStatusChange = async (profileId: string, status: boolean | null, e?: React.MouseEvent | React.ChangeEvent) => {
+    e?.stopPropagation(); // Prevent row click
     setUpdatingStatus(profileId);
     
     try {
@@ -159,7 +159,7 @@ const ProfileTable = ({
                             if (value === "Good") status = true;
                             else if (value === "Bad") status = false;
                             else status = null;
-                            handleStatusChange(profile.userId, status, e as any);
+                            handleStatusChange(profile.userId, status, e);
                           }}
                           onClick={(e) => e.stopPropagation()}
                           disabled={updatingStatus === profile.userId}

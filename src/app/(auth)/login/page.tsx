@@ -47,7 +47,7 @@ const Login = () => {
           autoClose: 3000,
         });
       }
-    } catch (error) {
+    } catch {
       setError("Network error. Please try again.");
       toast.error("Network error. Please try again.", {
         position: "top-right",
@@ -105,7 +105,7 @@ const Login = () => {
         </button>
         <div className="mt-4 text-center">
           <a href="/register" className="text-blue-500 hover:underline">
-            Don't have an account? Register
+            Don&apos;t have an account? Register
           </a>
         </div>
       </form>

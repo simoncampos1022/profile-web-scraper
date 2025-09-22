@@ -1,6 +1,5 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { AuthContextProps } from "@/types";
 
@@ -17,8 +16,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<any | null>(null);
-  const router = useRouter();
+  const [user, setUser] = useState<{ id: string; email: string; name: string } | null>(null);
 
   useEffect(() => {
     // Check for existing token and user in localStorage
@@ -45,7 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const handleSetUser = (newUser: any | null) => {
+  const handleSetUser = (newUser: { id: string; email: string; name: string } | null) => {
     setUser(newUser);
     if (newUser) {
       localStorage.setItem("user", JSON.stringify(newUser));

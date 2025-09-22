@@ -47,7 +47,7 @@ const Register = () => {
           autoClose: 3000,
         });
       }
-    } catch (error) {
+    } catch {
       setError("Network error. Please try again.");
       toast.error("Network error. Please try again.", {
         position: "top-right",

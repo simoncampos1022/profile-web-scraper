@@ -2,9 +2,9 @@ export type AuthContextProps = {
   isLoading: boolean;
   isAuthenticated: boolean;
   token: string | null;
-  user: any | null;
+  user: { id: string; email: string; name: string } | null;
   setToken: (token: string | null) => void;
-  setUser: (user: any | null) => void;
+  setUser: (user: { id: string; email: string; name: string } | null) => void;
 };
 
 export type ProfileModel = {

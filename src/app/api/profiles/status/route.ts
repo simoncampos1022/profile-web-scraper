@@ -30,9 +30,9 @@ export async function PUT(request: NextRequest) {
     let userId: string;
 
     try {
-      const decoded = jwt.verify(token, JWT_SECRET) as any;
+      const decoded = jwt.verify(token, JWT_SECRET) as { userId: string; email: string };
       userId = decoded.userId;
-    } catch (error) {
+    } catch {
       return NextResponse.json(
         { error: "Invalid token" },
         { status: 401 }
