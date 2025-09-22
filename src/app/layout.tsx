@@ -21,7 +21,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "🚀 AI Powered Profile Scraper",
+  title: "AI Powered Profile Scraper",
   description:
     "🔍 A modern web application for scraping and analyzing startup founder profiles with powerful filtering capabilities ✨",
   keywords: "web scraping, startup profiles, founder data, Next.js, MongoDB",

@@ -81,12 +81,12 @@ const ProfileTable = ({
   };
 
   const getStatusColor = (profile: ProfileModel) => {
-    if (!profile.viewers || !user) return "bg-gray-200";
+    if (!profile.viewers || !user) return "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200";
     
     const userStatus = profile.viewers[user.id];
-    if (userStatus === true) return "bg-green-200";
-    if (userStatus === false) return "bg-red-200";
-    return "bg-gray-200";
+    if (userStatus === true) return "bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200";
+    if (userStatus === false) return "bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-200";
+    return "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200";
   };
 
   const getStatusText = (profile: ProfileModel) => {
@@ -163,13 +163,16 @@ const ProfileTable = ({
                           }}
                           onClick={(e) => e.stopPropagation()}
                           disabled={updatingStatus === profile.userId}
-                          className={`px-2 py-1 rounded text-sm font-medium border-0 cursor-pointer ${getStatusColor(profile)} ${
+                          className={`px-2 py-1 rounded text-sm font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 ${getStatusColor(profile)} ${
                             updatingStatus === profile.userId ? "opacity-50" : ""
                           }`}
+                          style={{
+                            colorScheme: 'auto'
+                          }}
                         >
-                          <option value="Yet">Yet</option>
-                          <option value="Good">Good</option>
-                          <option value="Bad">Bad</option>
+                          <option value="Yet" className="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200">Yet</option>
+                          <option value="Good" className="bg-white dark:bg-gray-800 text-green-800 dark:text-green-200">Good</option>
+                          <option value="Bad" className="bg-white dark:bg-gray-800 text-red-800 dark:text-red-200">Bad</option>
                         </select>
                       </div>
                     </td>
