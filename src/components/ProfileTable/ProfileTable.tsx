@@ -62,7 +62,7 @@ const ProfileTable = ({
           pauseOnHover: true,
           draggable: true,
         });
-      }
+      } 
     } catch (error) {
       console.error("Error updating status:", error);
       
