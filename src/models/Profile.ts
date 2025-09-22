@@ -40,6 +40,11 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
     enum: ["default", "active", "pending", "archived"],
     default: "default",
+  },
+  viewers: {
+    type: Map,
+    of: Boolean,
+    default: new Map(),
   }
 });
 

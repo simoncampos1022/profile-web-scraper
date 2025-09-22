@@ -77,6 +77,41 @@ const Dashboard = () => {
     setProfile(profile);
   };
 
+  const handleStatusUpdate = (profileId: string, status: boolean | null, viewers?: Record<string, boolean>) => {
+    setProfiles(
+      profiles.map((p) => {
+        if (p.userId === profileId) {
+          const updatedProfile = { ...p };
+          
+          // Use the viewers data from the API response if available
+          if (viewers) {
+            updatedProfile.viewers = viewers;
+          } else {
+            // Fallback to local update if no viewers data provided
+            if (!updatedProfile.viewers) {
+              updatedProfile.viewers = {};
+            }
+            
+            // Get the current user ID from localStorage
+            const currentUserId = localStorage.getItem("userId");
+            if (currentUserId) {
+              if (status === null) {
+                // Remove the viewer entry (set to "Yet" status)
+                delete updatedProfile.viewers[currentUserId];
+              } else {
+                // Set the viewer status (true = Good, false = Bad)
+                updatedProfile.viewers[currentUserId] = status;
+              }
+            }
+          }
+          
+          return updatedProfile;
+        }
+        return p;
+      })
+    );
+  };
+
   const handleOverview = (profile: ProfileModel) => {
     setProfile(profile);
     setOverview(true);
@@ -100,6 +135,7 @@ const Dashboard = () => {
           loading={loading}
           profiles={profiles}
           handleOverview={handleOverview}
+          onStatusUpdate={handleStatusUpdate}
         />
         <ProfileFooter
           total={total}

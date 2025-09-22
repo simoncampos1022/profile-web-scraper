@@ -1,15 +1,61 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const { setToken, setUser } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Email:", email);
-    console.log("Password:", password);
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Login successful, store token and redirect
+        setToken(data.token);
+        setUser(data.user);
+        toast.success("Login successful! Welcome back.", {
+          position: "top-right",
+          autoClose: 2000,
+        });
+        router.push("/");
+      } else {
+        setError(data.error || "Login failed");
+        toast.error(data.error || "Login failed", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    } catch (error) {
+      setError("Network error. Please try again.");
+      toast.error("Network error. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,12 +91,23 @@ const Login = () => {
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
           />
         </div>
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+          disabled={loading}
+          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
+        <div className="mt-4 text-center">
+          <a href="/register" className="text-blue-500 hover:underline">
+            Don't have an account? Register
+          </a>
+        </div>
       </form>
     </div>
   );

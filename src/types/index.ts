@@ -2,7 +2,9 @@ export type AuthContextProps = {
   isLoading: boolean;
   isAuthenticated: boolean;
   token: string | null;
+  user: any | null;
   setToken: (token: string | null) => void;
+  setUser: (user: any | null) => void;
 };
 
 export type ProfileModel = {
@@ -37,6 +39,7 @@ export type ProfileModel = {
     personal: string[];
   };
   linkedIn?: string;
+  viewers?: Record<string, boolean>;
 };
 
 export type FilterModel = {

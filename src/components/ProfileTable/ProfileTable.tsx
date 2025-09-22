@@ -1,15 +1,102 @@
 import Image from "next/image";
 import { ProfileModel } from "@/types";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 const ProfileTable = ({
   loading,
   profiles,
   handleOverview,
+  onStatusUpdate,
 }: {
   loading: boolean;
   profiles: ProfileModel[];
   handleOverview: (profile: ProfileModel) => void;
+  onStatusUpdate: (profileId: string, status: boolean | null, viewers?: Record<string, boolean>) => void;
 }) => {
+  const { token, user } = useAuth();
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+
+  const handleStatusChange = async (profileId: string, status: boolean | null, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent row click
+    setUpdatingStatus(profileId);
+    
+    try {
+      const response = await fetch("/api/profiles/status", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          profileId,
+          status,
+        }),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        onStatusUpdate(profileId, status, responseData.viewers);
+        
+        // Show success toast
+        const statusText = status === true ? "Good" : status === false ? "Bad" : "Yet";
+        toast.success(`Profile status updated to "${statusText}"`, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to update status:", errorData.error || "Unknown error");
+        
+        // Show error toast
+        toast.error(`Failed to update status: ${errorData.error || "Unknown error"}`, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      
+      // Show error toast for network errors
+      toast.error("Network error. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } finally {
+      setUpdatingStatus(null);
+    }
+  };
+
+  const getStatusColor = (profile: ProfileModel) => {
+    if (!profile.viewers || !user) return "bg-gray-200";
+    
+    const userStatus = profile.viewers[user.id];
+    if (userStatus === true) return "bg-green-200";
+    if (userStatus === false) return "bg-red-200";
+    return "bg-gray-200";
+  };
+
+  const getStatusText = (profile: ProfileModel) => {
+    if (!profile.viewers || !user) return "Yet";
+    
+    const userStatus = profile.viewers[user.id];
+    if (userStatus === true) return "Good";
+    if (userStatus === false) return "Bad";
+    return "Yet";
+  };
   return (
     <div className="flex-1 overflow-hidden">
       <div className="h-full overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
@@ -21,6 +108,7 @@ const ProfileTable = ({
               <th className="p-4">Location</th>
               <th className="p-4">Funding Status</th>
               <th className="p-4">Last Seen</th>
+              <th className="p-4">Status</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -29,7 +117,7 @@ const ProfileTable = ({
                   .fill(null)
                   .map((_, index) => (
                     <tr key={`loading-${index}`}>
-                      <td colSpan={5} className="text-center p-4">
+                      <td colSpan={6} className="text-center p-4">
                         <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 rounded"></div>
                       </td>
                     </tr>
@@ -60,6 +148,30 @@ const ProfileTable = ({
                     </td>
                     <td className="p-2 whitespace-nowrap">
                       {profile.lastSeen ? profile.lastSeen : "N/A"}
+                    </td>
+                    <td className="p-2">
+                      <div className="relative">
+                        <select
+                          value={getStatusText(profile)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            let status: boolean | null = null;
+                            if (value === "Good") status = true;
+                            else if (value === "Bad") status = false;
+                            else status = null;
+                            handleStatusChange(profile.userId, status, e as any);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                          disabled={updatingStatus === profile.userId}
+                          className={`px-2 py-1 rounded text-sm font-medium border-0 cursor-pointer ${getStatusColor(profile)} ${
+                            updatingStatus === profile.userId ? "opacity-50" : ""
+                          }`}
+                        >
+                          <option value="Yet">Yet</option>
+                          <option value="Good">Good</option>
+                          <option value="Bad">Bad</option>
+                        </select>
+                      </div>
                     </td>
                   </tr>
                 ))}
