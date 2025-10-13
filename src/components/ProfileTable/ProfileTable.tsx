@@ -1,3 +1,4 @@
+'use client'
 import Image from "next/image";
 import { ProfileModel } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
