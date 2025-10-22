@@ -164,7 +164,7 @@ const ProfileTable = ({
                           }}
                           onClick={(e) => e.stopPropagation()}
                           disabled={updatingStatus === profile.userId}
-                          className={`px-2 py-1 rounded text-sm font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 ${getStatusColor(profile)} ${
+                          className={`px-3 py-3 rounded text-sm font-medium border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 ${getStatusColor(profile)} ${
                             updatingStatus === profile.userId ? "opacity-50" : ""
                           }`}
                           style={{

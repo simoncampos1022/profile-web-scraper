@@ -15,17 +15,26 @@ const Dashboard = () => {
   const [overview, setOverview] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState(false);
   const [profiles, setProfiles] = React.useState<ProfileModel[]>([]);
+  // Draft filter reflects UI inputs; appliedFilter is used to fetch
   const [filter, setFilter] = React.useState<FilterModel>({
     name: "",
     age: 0,
     location: "",
     funding: "",
+    keyword: "",
+  });
+  const [appliedFilter, setAppliedFilter] = React.useState<FilterModel>({
+    name: "",
+    age: 0,
+    location: "",
+    funding: "",
+    keyword: "",
   });
 
   const fetchProfiles = useCallback(async () => {
     setLoading(true);
     try {
-      const filterParams = filter
+      const filterParams = appliedFilter
         ? Object.entries(filter).reduce(
             (acc: Record<string, string>, [key, value]) => {
               if (value) {
@@ -57,7 +66,7 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
-  }, [curPage, limit, filter]);
+  }, [curPage, limit, appliedFilter]);
 
   useEffect(() => {
     fetchProfiles();
@@ -68,6 +77,11 @@ const Dashboard = () => {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+  };
+
+  const handleSearch = () => {
+    setCurPage(1);
+    setAppliedFilter(filter);
   };
 
   const handleUpdate = (profile: ProfileModel) => {
@@ -123,14 +137,25 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="relative p-5 flex flex-1 flex-col gap-6 overflow-auto">
+      <div className="relative p-5 flex flex-1 flex-col gap-4 overflow-auto">
         <ProfileOverview
           profile={profile}
           show={overview}
           handleUpdate={handleUpdate}
           handleClose={handleOverviewClose}
         />
-        <ProfileFilter filter={filter} handleChange={handleFilterChange} />
+        <ProfileFilter
+          filter={filter}
+          handleChange={handleFilterChange}
+          onSearch={handleSearch}
+          onReset={() => {
+            const base = { name: "", age: 0, location: "", funding: "", keyword: "" } as FilterModel;
+            setFilter(base);
+            setAppliedFilter(base);
+            setCurPage(1);
+          }}
+          loading={loading}
+        />
         <ProfileTable
           loading={loading}
           profiles={profiles}

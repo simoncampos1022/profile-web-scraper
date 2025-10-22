@@ -49,4 +49,5 @@ export type FilterModel = {
   sumary?: string;
   startupName?: string;
   funding?: string;
+  keyword?: string;
 };

@@ -44,9 +44,6 @@ export default function RootLayout({
         <main>
           <MainProvider>
             <div className="flex flex-col w-full h-screen">
-              <div className="fixed z-50 top-0 right-0 mt-4 mr-4">
-                <ThemeToggle />
-              </div>
               <Navbar />
               {children}
               <ToastContainer

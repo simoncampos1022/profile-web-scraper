@@ -11,6 +11,7 @@ export async function GET(request: Request) {
   const age = url.searchParams.get("age");
   const location = url.searchParams.get("location");
   const funding = url.searchParams.get("funding");
+  const keyword = url.searchParams.get("keyword");
 
   const skip = (page - 1) * limit;
   const query: FilterQuery<typeof Profile> = {};
@@ -26,6 +27,33 @@ export async function GET(request: Request) {
   if (name) query.name = { $regex: name, $options: "i" };
   if (location) query.location = { $regex: location, $options: "i" };
   if (funding) query["startup.funding"] = { $regex: funding, $options: "i" };
+
+  // Broad keyword search across many text fields
+  if (keyword && keyword.trim().length > 0) {
+    const rx = { $regex: keyword, $options: "i" } as const;
+    query.$or = [
+      { name: rx },
+      { location: rx },
+      { sumary: rx },
+      { intro: rx },
+      { lifeStory: rx },
+      { freeTime: rx },
+      { other: rx },
+      { accomplishments: rx },
+      { linkedIn: rx },
+      { "startup.name": rx },
+      { "startup.description": rx },
+      { "startup.progress": rx },
+      { "startup.funding": rx },
+      { education: rx }, // matches any array element with regex
+      { employment: rx },
+      { "cofounderPreferences.requirements": rx },
+      { "cofounderPreferences.idealPersonality": rx },
+      { "cofounderPreferences.equity": rx },
+      { "interests.shared": rx },
+      { "interests.personal": rx },
+    ];
+  }
 
   try {
     await connectDB();
