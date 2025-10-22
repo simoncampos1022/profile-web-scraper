@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import MainProvider from "@/contexts";
 
-import ThemeToggle from "@/components/Theme/ThemeToggle";
 import Navbar from "@/components/Navbar/Navbar";
 import { ToastContainer } from "react-toastify";
 

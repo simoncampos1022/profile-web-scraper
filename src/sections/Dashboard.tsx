@@ -35,7 +35,7 @@ const Dashboard = () => {
     setLoading(true);
     try {
       const filterParams = appliedFilter
-        ? Object.entries(filter).reduce(
+        ? Object.entries(appliedFilter).reduce(
             (acc: Record<string, string>, [key, value]) => {
               if (value) {
                 acc[key] = value.toString();
