@@ -87,7 +87,7 @@ export async function POST(request: Request) {
           .replace("Last seen ", "")
           .trim(),
         avatar: mainContent.find(".css-1bm26bw").attr("src"),
-        sumary: mainContent.find(".css-cyoc3t").text().trim(),
+        sumary: mainContent.find(".css-1wz7m2j").text().trim(),
         intro: mainContent
           .find('span.css-19yrmx8:contains("Intro")')
           .next(".css-1tp1ukf")
@@ -118,14 +118,14 @@ export async function POST(request: Request) {
         education: mainContent
           .find('.css-19yrmx8:contains("Education")')
           .next(".css-1tp1ukf")
-          .find(".css-kaq1dv")
+          .find("li, .css-1a0w822, .css-kaq1dv")
           .map((_, el) => $(el).text().trim())
           .get(),
 
         employment: mainContent
           .find('.css-19yrmx8:contains("Employment")')
           .next(".css-1tp1ukf")
-          .find(".css-kaq1dv")
+          .find("li, .css-1a0w822, .css-kaq1dv")
           .map((_, el) => $(el).text().trim())
           .get(),
 
