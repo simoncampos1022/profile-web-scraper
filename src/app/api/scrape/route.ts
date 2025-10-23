@@ -34,10 +34,11 @@ function getProgress(): ScrapeProgress {
 }
 
 export async function POST(request: Request) {
-  let { ssoKey, susSession, action } = await request.json();
+  const body = (await request.json()) as { ssoKey?: string; susSession?: string; action?: string };
+  const ssoKey: string = body.ssoKey ?? process.env.NEXT_PUBLIC_SSO_KEY ?? "";
+  const susSession: string = body.susSession ?? process.env.NEXT_PUBLIC_SUS_SESSION ?? "";
+  const { action } = body;
   const url = process.env.NEXT_PUBLIC_FETCH_URL;
-  ssoKey = ssoKey || process.env.NEXT_PUBLIC_SSO_KEY;
-  susSession = susSession || process.env.NEXT_PUBLIC_SUS_SESSION;
 
   if (!url) {
     return NextResponse.json({ error: "URL is required" }, { status: 400 });
@@ -55,6 +56,10 @@ export async function POST(request: Request) {
     new URL(url);
   } catch (err) {
     return NextResponse.json({ error: "Invalid URL format" + err }, { status: 400 });
+  }
+
+  if (!ssoKey || !susSession) {
+    return NextResponse.json({ error: "SSO credentials are required" }, { status: 400 });
   }
 
   try {
