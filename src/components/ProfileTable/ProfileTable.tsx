@@ -98,6 +98,14 @@ const ProfileTable = ({
     if (userStatus === false) return "Bad";
     return "Yet";
   };
+  
+  const getTechnicalStatus = (profile: ProfileModel) => {
+    const summary = (profile.sumary || "").toLowerCase();
+    if (!summary) return "N/A";
+    if (/\bnon[- ]?technical\b/.test(summary)) return "Non-technical";
+    if (/\btechnical\b/.test(summary)) return "Technical";
+    return "N/A";
+  };
   return (
     <div className="flex-1 overflow-hidden">
       <div className="h-full overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
@@ -106,9 +114,11 @@ const ProfileTable = ({
             <tr className="font-semibold text-gray-600 dark:text-gray-400 uppercase">
               <th className="p-4"></th>
               <th className="p-4">Name</th>
+              <th className="p-4">Technical Status</th>
               <th className="p-4">Location</th>
               <th className="p-4">Funding Status</th>
               <th className="p-4">Last Seen</th>
+              <th className="p-4">Updated Date</th>
               <th className="p-4">Status</th>
             </tr>
           </thead>
@@ -118,7 +128,7 @@ const ProfileTable = ({
                   .fill(null)
                   .map((_, index) => (
                     <tr key={`loading-${index}`}>
-                      <td colSpan={6} className="text-center p-4">
+                      <td colSpan={7} className="text-center p-4">
                         <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-4 rounded"></div>
                       </td>
                     </tr>
@@ -141,15 +151,23 @@ const ProfileTable = ({
                     <td className="p-2 whitespace-nowrap">
                       {profile.name || "N/A"}
                     </td>
-                    <td className="p-2 whitespace-nowrap">
-                      {profile.location || "N/A"}
-                    </td>
-                    <td className="p-2 max-w-80 text-ellipsis overflow-hidden whitespace-nowrap">
-                      {profile.startup?.funding || "N/A"}
-                    </td>
+                <td className="p-2 whitespace-nowrap">
+                  {getTechnicalStatus(profile)}
+                </td>
+                <td className="p-2 whitespace-nowrap">
+                  {profile.location || "N/A"}
+                </td>
+                <td className="p-2 max-w-80 text-ellipsis overflow-hidden whitespace-nowrap">
+                  {profile.startup?.funding || "N/A"}
+                </td>
                     <td className="p-2 whitespace-nowrap">
                       {profile.lastSeen ? profile.lastSeen : "N/A"}
                     </td>
+                <td className="p-2 whitespace-nowrap">
+                  {profile.updatedAt
+                    ? new Date(profile.updatedAt).toLocaleString()
+                    : "N/A"}
+                </td>
                     <td className="p-2">
                       <div className="relative">
                         <select

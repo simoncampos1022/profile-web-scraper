@@ -39,6 +39,7 @@ export type ProfileModel = {
     personal: string[];
   };
   linkedIn?: string;
+  updatedAt?: string | Date;
   viewers?: Record<string, boolean>;
 };
 
