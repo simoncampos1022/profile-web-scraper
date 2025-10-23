@@ -67,6 +67,7 @@ export async function GET(request: Request) {
       .limit(limit)
       .skip(skip)
       .sort({ createdAt: -1 })
+      .lean()
       .exec();
 
     return NextResponse.json(

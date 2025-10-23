@@ -106,6 +106,26 @@ const ProfileTable = ({
     if (/\btechnical\b/.test(summary)) return "Technical";
     return "N/A";
   };
+  
+  const formatUpdatedAtUTC = (value: unknown) => {
+    try {
+      const d = new Date(value as string);
+      if (isNaN(d.getTime())) return "N/A";
+      const formatted = new Intl.DateTimeFormat(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+        timeZone: "UTC",
+      }).format(d);
+      return `${formatted} UTC`;
+    } catch {
+      return "N/A";
+    }
+  };
   return (
     <div className="flex-1 overflow-hidden">
       <div className="h-full overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
@@ -164,9 +184,7 @@ const ProfileTable = ({
                       {profile.lastSeen ? profile.lastSeen : "N/A"}
                     </td>
                 <td className="p-2 whitespace-nowrap">
-                  {profile.updatedAt
-                    ? new Date(profile.updatedAt).toLocaleString()
-                    : "N/A"}
+                  {profile.updatedAt ? formatUpdatedAtUTC(profile.updatedAt) : "N/A"}
                 </td>
                     <td className="p-2">
                       <div className="relative">

@@ -191,10 +191,11 @@ export async function POST(request: Request) {
     };
 
     // After scraping the profile data
-    await Profile.findOneAndUpdate({ userId: profile.userId }, profile, {
-      upsert: true,
-      new: true,
-    });
+    await Profile.findOneAndUpdate(
+      { userId: profile.userId },
+      { $set: profile, $currentDate: { updatedAt: true } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 
     return NextResponse.json({ ok: true, profile: profile }, { status: 200 });
   } catch (error: unknown) {
