@@ -51,4 +51,5 @@ export type FilterModel = {
   startupName?: string;
   funding?: string;
   keyword?: string;
+  technicalStatus?: "technical" | "non-technical" | "";
 };

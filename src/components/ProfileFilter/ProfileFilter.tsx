@@ -22,11 +22,7 @@ const ProfileFilter = ({
         }}
         className="flex flex-col"
       >
-        <div className="flex items-center justify-between">
-          
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-7 gap-4">
           {/* Keyword */}
           <div className="flex flex-col gap-1">
             <label htmlFor="keyword" className="text-sm font-medium text-gray-600 dark:text-gray-300">Keyword</label>
@@ -137,6 +133,23 @@ const ProfileFilter = ({
                 aria-label="Funding Status"
               />
             </div>
+          </div>
+          
+          {/* Technical Status */}
+          <div className="flex flex-col gap-1">
+            <label htmlFor="technicalStatus" className="text-sm font-medium text-gray-600 dark:text-gray-300">Technical Status</label>
+            <select
+              id="technicalStatus"
+              name="technicalStatus"
+              value={filter?.technicalStatus || ""}
+              onChange={handleChange as any}
+              className="w-full pl-3 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-white dark:bg-gray-800"
+              aria-label="Technical Status"
+            >
+              <option value="">All</option>
+              <option value="technical">Technical</option>
+              <option value="non-technical">Non-technical</option>
+            </select>
           </div>
           
           <div className="flex justify-between gap-4 items-end">

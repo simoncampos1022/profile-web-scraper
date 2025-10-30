@@ -22,6 +22,7 @@ const Dashboard = () => {
     location: "",
     funding: "",
     keyword: "",
+    technicalStatus: "",
   });
   const [appliedFilter, setAppliedFilter] = React.useState<FilterModel>({
     name: "",
@@ -29,6 +30,7 @@ const Dashboard = () => {
     location: "",
     funding: "",
     keyword: "",
+    technicalStatus: "",
   });
 
   const fetchProfiles = useCallback(async () => {
@@ -72,7 +74,7 @@ const Dashboard = () => {
     fetchProfiles();
   }, [fetchProfiles]);
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFilter((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -149,7 +151,7 @@ const Dashboard = () => {
           handleChange={handleFilterChange}
           onSearch={handleSearch}
           onReset={() => {
-            const base = { name: "", age: 0, location: "", funding: "", keyword: "" } as FilterModel;
+            const base = { name: "", age: 0, location: "", funding: "", keyword: "", technicalStatus: "" } as FilterModel;
             setFilter(base);
             setAppliedFilter(base);
             setCurPage(1);

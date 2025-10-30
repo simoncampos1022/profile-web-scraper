@@ -12,6 +12,7 @@ export async function GET(request: Request) {
   const location = url.searchParams.get("location");
   const funding = url.searchParams.get("funding");
   const keyword = url.searchParams.get("keyword");
+  const technicalStatus = url.searchParams.get("technicalStatus");
 
   const skip = (page - 1) * limit;
   const query: FilterQuery<typeof Profile> = {};
@@ -52,6 +53,31 @@ export async function GET(request: Request) {
       { "cofounderPreferences.equity": rx },
       { "interests.shared": rx },
       { "interests.personal": rx },
+    ];
+  }
+
+  // Add technicalStatus filter
+  if (technicalStatus === "technical") {
+    // Include 'technical' but not 'non-technical' in sumary OR intro
+    query.$and = [
+      {
+        $or: [
+          { sumary: { $regex: "\\btechnical\\b", $options: "i" } },
+          { intro: { $regex: "\\btechnical\\b", $options: "i" } },
+        ],
+      },
+      {
+        $nor: [
+          { sumary: { $regex: "\\bnon[- ]?technical\\b", $options: "i" } },
+          { intro: { $regex: "\\bnon[- ]?technical\\b", $options: "i" } },
+        ],
+      },
+    ];
+  } else if (technicalStatus === "non-technical") {
+    // Only match 'non-technical' (or nontechnical etc)
+    query.$or = [
+      { sumary: { $regex: "\\bnon[- ]?technical\\b", $options: "i" } },
+      { intro: { $regex: "\\bnon[- ]?technical\\b", $options: "i" } },
     ];
   }
 
